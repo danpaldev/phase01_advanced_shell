@@ -2,28 +2,49 @@
 while test $# -gt 0; do
   case "$1" in
     -h|--help)
-      echo "$package - attempt to capture frames"
+      echo "Gproc - An easy cli tool for PID inspection"
       echo " "
-      echo "$package [options] application [arguments]"
       echo " "
-      echo "options:"
-      echo "-h, --help                show brief help"
-      echo "-a, --action=ACTION       specify an action to use"
-      echo "-o, --output-dir=DIR      specify a directory to store output in"
+      echo "Options:             Arguments:                  "
+      echo " "
+      echo "-h, --help           Show brief help"
+      echo "-i, --info=PID       Get info about a specific PID"
+      echo "--get-all-pids       Get ALL the processes running in your system nicely sorted"
       exit 0
       ;;
-    -a)
+    -i)
       shift
       if test $# -gt 0; then
-        echo $1
+        pid=$1
+	who_folder=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $9 }')
+	who_user=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $3 }')
+	triggered_by_cmd=$(< /proc/$pid/cmdline)
+	echo "$pid Process"
+	echo "Working directory on $who_folder"
+	echo "Ran by user ${who_user}"
+	echo "Triggered by command ${triggered_by_cmd}"
+
       else
         echo "no process specified"
         exit 1
       fi
       shift
       ;;
-    --action*)
-      echo $1 | sed -e 's/^[^=]*=//g'
+    --info*)
+      if test $# -gt 0; then
+	pid=$(echo $1 | sed -e 's/^[^=]*=//g')
+	who_folder=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $9 }')
+	who_user=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $3 }')
+	triggered_by_cmd=$(< /proc/$pid/cmdline)
+	echo "$pid Process"
+	echo "Working directory on $who_folder"
+	echo "Ran by user ${who_user}"
+	echo "Triggered by command ${triggered_by_cmd}"
+
+      else
+        echo "no process specified"
+        exit 1
+      fi
       shift
       ;;
     --get-all-pids)
