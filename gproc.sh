@@ -29,7 +29,11 @@ while test $# -gt 0; do
     -o)
       for entry in /proc/*
       do
-	echo "$entry" | sed -e 's/\/proc\///g'
+	res=$(echo "$entry" | sed -e 's/\/proc\///g')
+	if [ "$res" -eq "$res" ] 2> /dev/null 
+	then
+	    echo $res
+	fi
       done	
       shift
       ;;
