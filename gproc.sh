@@ -18,7 +18,7 @@ while test $# -gt 0; do
         pid=$1
 	who_folder=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $9 }')
 	who_user=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $3 }')
-	triggered_by_cmd=$(< /proc/$pid/cmdline)
+	triggered_by_cmd=$(tr -d '\0' < /proc/$pid/cmdline)
 	echo "$pid Process"
 	echo "Working directory on $who_folder"
 	echo "Ran by user ${who_user}"
@@ -35,7 +35,7 @@ while test $# -gt 0; do
 	pid=$(echo $1 | sed -e 's/^[^=]*=//g')
 	who_folder=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $9 }')
 	who_user=$(sudo lsof -w -p ${pid} | grep cwd | awk '{ print $3 }')
-	triggered_by_cmd=$(< /proc/$pid/cmdline)
+	triggered_by_cmd=$(tr -d '\0' < /proc/$pid/cmdline)
 	echo "$pid Process"
 	echo "Working directory on $who_folder"
 	echo "Ran by user ${who_user}"
@@ -64,10 +64,6 @@ while test $# -gt 0; do
       do
           printf "%-8s\n" "${value}"
       done | column
-      shift
-      ;;
-    --output-dir*)
-      export OUTPUT=`echo $1 | sed -e 's/^[^=]*=//g'`
       shift
       ;;
     *)
