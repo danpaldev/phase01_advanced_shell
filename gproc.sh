@@ -26,15 +26,21 @@ while test $# -gt 0; do
       echo $1 | sed -e 's/^[^=]*=//g'
       shift
       ;;
-    -o)
+    --get-all-pids)
+      pidList=()
       for entry in /proc/*
       do
 	res=$(echo "$entry" | sed -e 's/\/proc\///g')
 	if [ "$res" -eq "$res" ] 2> /dev/null 
 	then
-	    echo $res
+	    pidList+=($res)	
+	    #echo $res
 	fi
-      done	
+      done
+      for value in "${pidList[@]}"
+      do
+          echo $value
+      done
       shift
       ;;
     --output-dir*)
