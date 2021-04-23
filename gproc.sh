@@ -37,10 +37,11 @@ while test $# -gt 0; do
 	    #echo $res
 	fi
       done
+      # Displaying array in columns
       for value in "${pidList[@]}"
       do
-          echo $value
-      done
+          printf "%-8s\n" "${value}"
+      done | column
       shift
       ;;
     --output-dir*)
