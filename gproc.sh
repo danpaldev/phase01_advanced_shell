@@ -37,10 +37,9 @@ while test $# -gt 0; do
 	    #echo $res
 	fi
       done
-      IFS=$'\n' sorted=($(sort <<< "${pidList[@]}")); unset IFS
-      #printf "[%s]\n" "${sorted[@]}"
-      # Displaying array in columns
-      for value in "${sorted[@]}"
+      #Sorting Arrays in Bash - https://stackoverflow.com/a/11789688/13954598
+      sortedPidList=($(sort <<< "${pidList[@]}"))
+      for value in "${sortedPidList[@]}"
       do
           printf "%-8s\n" "${value}"
       done | column
